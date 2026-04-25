@@ -8,7 +8,7 @@ import { IoIosStar } from 'react-icons/io';
 const NewsCard = ({news}) => {
     console.log(news, "news")
     return (
-        <div className="card bg-base-100 w-96 shadow-sm">
+        <div className="card bg-base-100 w-full shadow-sm">
   <div className="card-body">
     {/* Auther Info */}
     <div className='flex justify-between items-center bg-slate-200 p-4'>

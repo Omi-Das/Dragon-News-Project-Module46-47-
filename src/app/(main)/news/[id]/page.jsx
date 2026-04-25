@@ -25,8 +25,8 @@ const NewsDetailsPage = async({params}) => {
     const news = await getNewsDetailsId(id)
     console.log(news, "news")
     return (
-        <div className='max-w-5xl mx-auto my-8 card'>
-             <div className="card bg-base-100 w-96 shadow-sm">
+        <div className='max-w-7xl mx-auto my-8 card'>
+             <div className="card bg-base-100 w-full shadow-sm">
               <div className="card-body">
                 {/* Auther Info */}
                 <div className='flex justify-between items-center bg-slate-200 p-4'>
@@ -38,7 +38,7 @@ const NewsDetailsPage = async({params}) => {
                 width={40}
                 className='rounded-full'
                 />
-                <div className='flex justify-between items-center'>
+                <div className='flex flex-col justify-between items-center'>
                     <h2 className='font-semibold'>{news.author?.name}</h2>
                     <p className='text-xs'>{news.author?.published_date}</p>
                 </div>
