@@ -1,16 +1,27 @@
 'use client'
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const LoginPage = () => {
    const{ register, handleSubmit, watch, formState: { errors }} = useForm()
-    const handleLoginFunc = (data) => {
+
+   const [isShowPassword, setIsShowPassword] = useState(false)
+    const handleLoginFunc = async(data) => {
         // e.preventDefault()
         // const email = e.target.email.value
         // const password = e.target.password.value
         // console.log(email,password)
         console.log(data, "data")
+        const { data:res, error } = await authClient.signIn.email({
+    email: data.email, // required
+    password: data.password, // required
+    rememberMe: true,
+    callbackURL: "/",
+});
     }
     // console.log(errors, "errors")
     // console.log(watch("email"))
@@ -37,14 +48,15 @@ const LoginPage = () => {
                     </fieldset>
 
                     {/* Password Field */}
-                    <fieldset className="fieldset">
+                    <fieldset className="fieldset relative">
                         <legend className="fieldset-legend font-semibold text-gray-500">Password</legend>
                         <input 
-                            type="password" 
+                            type={isShowPassword ? "text" : "password"}
                             className={`input input-bordered w-full focus:input-primary ${errors.password ? 'input-error' : ''}`}
                             placeholder="Type here password" 
-                            {...register("password", { required: "Password field is required" })}
-                        />
+                          {...register("password", { required: "Password field is required" })}
+                        /> 
+                        <span className="absolute right-1 top-3 cursor-pointer" onClick={() => setIsShowPassword(!isShowPassword)}>{isShowPassword ? <FaEye/> : <FaEyeSlash/>}</span>
                         {errors.password && <span className="label-text-alt text-red-500 mt-1">{errors.password.message}</span>}
                     </fieldset>
 
@@ -54,7 +66,7 @@ const LoginPage = () => {
                 </form>
 
                 <p className="mt-4 text-sm text-center">
-                    Don't have an account? <Link href="/register" className="text-blue-500 hover:underline">Register</Link>
+                    Don&apos;t have an account? <Link href="/register" className="text-blue-500 hover:underline">Register</Link>
                 </p>
             </div>
         </div>

@@ -1,11 +1,16 @@
 'use client'
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const RegisterPage = () => {
    const{ register, handleSubmit, watch, formState: { errors }} = useForm()
-    const handleRegisterFunc = (data) => {
+
+    const [isShowPassword, setIsShowPassword] = useState(false)
+    const handleRegisterFunc = async(data) => {
         // e.preventDefault()
         // const email = e.target.email.value
         // const password = e.target.password.value
@@ -13,10 +18,27 @@ const RegisterPage = () => {
         console.log(data, "data")
         const {email, name, photo, password} = data
         console.log(name,photo)
+
+         const { data:res, error } = await authClient.signUp.email({
+           name: name, // required
+    email: email, // required
+    password: password, // required
+    image: photo,
+    callbackURL: "/",
+    })
+
+    console.log(res, error)
+    if(error){
+        alert(error.message)
+    }
+    if(res){
+        alert("signup successful")
+    }
     }
     // console.log(errors, "errors")
     // console.log(watch("email"))
     // console.log(watch("password"))
+
 
     return (
         <div className="container mx-auto min-h-screen flex items-center justify-center bg-gray-50">
@@ -26,29 +48,6 @@ const RegisterPage = () => {
                 </h2>
                 <form className="space-y-4" onSubmit={handleSubmit(handleRegisterFunc)}>
                     
-                    {/* Email Field */}
-                    <fieldset className="fieldset">
-                        <legend className="fieldset-legend font-semibold text-gray-500">Email</legend>
-                        <input 
-                            type="email" 
-                            className={`input input-bordered w-full focus:input-primary ${errors.email ? 'input-error' : ''}`}
-                            placeholder="Type here email" 
-                            {...register("email", { required: "Email field is required" })} // এটি ইনপুট ট্যাগের ভেতরে হবে
-                        />
-                        {errors.email && <span className="label-text-alt text-red-500 mt-1">{errors.email.message}</span>}
-                    </fieldset>
-
-                    {/* Password Field */}
-                    <fieldset className="fieldset">
-                        <legend className="fieldset-legend font-semibold text-gray-500">Password</legend>
-                        <input 
-                            type="password" 
-                            className={`input input-bordered w-full focus:input-primary ${errors.password ? 'input-error' : ''}`}
-                            placeholder="Type here password" 
-                            {...register("password", { required: "Password field is required" })}
-                        />
-                        {errors.password && <span className="label-text-alt text-red-500 mt-1">{errors.password.message}</span>}
-                    </fieldset>
 {/* name field */}
                       <fieldset className="fieldset">
                         <legend className="fieldset-legend font-semibold text-gray-500">Name</legend>
@@ -71,6 +70,33 @@ const RegisterPage = () => {
                             {...register("photo", { required: "photo field is required" })}
                         />
                         {errors.photo && <span className="label-text-alt text-red-500 mt-1">{errors.photo.message}</span>}
+                    </fieldset>
+                    {/* Email Field */}
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend font-semibold text-gray-500">Email</legend>
+                        <input 
+                            type="email" 
+                            className={`input input-bordered w-full focus:input-primary ${errors.email ? 'input-error' : ''}`}
+                            placeholder="Type here email" 
+                            {...register("email", { required: "Email field is required" })} // এটি ইনপুট ট্যাগের ভেতরে হবে
+                        />
+                        {errors.email && <span className="label-text-alt text-red-500 mt-1">{errors.email.message}</span>}
+                    </fieldset>
+
+                    {/* Password Field */}
+                    <fieldset className="fieldset relative">
+                        <legend className="fieldset-legend font-semibold text-gray-500">Password</legend>
+                        <input 
+                            type={isShowPassword ? "text" : "password"}
+                            className={`input input-bordered w-full focus:input-primary ${errors.password ? 'input-error' : ''}`}
+                            placeholder="Type here password" 
+                            {...register("password", { 
+                                required: "Password field is required",
+                                minLength: { value: 6, message: "Password must be at least 6 characters" }
+                            })}
+                        />
+                         <span className="absolute right-1 top-3 cursor-pointer" onClick={() => setIsShowPassword(!isShowPassword)}>{isShowPassword ? <FaEye/> : <FaEyeSlash/>}</span>
+                        {errors.password && <span className="label-text-alt text-red-500 mt-1">{errors.password.message}</span>}
                     </fieldset>
 
 
