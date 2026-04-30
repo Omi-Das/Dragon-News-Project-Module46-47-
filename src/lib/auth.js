@@ -24,7 +24,7 @@ if (uri.startsWith("mongodb+srv://")) {
   const auth = parsed.username || parsed.password
     ? `${encodeURIComponent(parsed.username)}:${encodeURIComponent(parsed.password)}@`
     : "";
-  const dbName = parsed.pathname?.slice(1) || "";
+  const dbName  = parsed.pathname?.slice(1) || "";
   const query = parsed.searchParams.toString();
   clientUri = `mongodb://${auth}${hosts}/${dbName}${query ? `?${query}` : ""}`;
 }
